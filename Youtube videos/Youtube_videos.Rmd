@@ -1,0 +1,148 @@
+---
+title: "Trending Youtube video statistics (Great Britain)"
+author: "Dr Pravin Jeyaraj"
+date: "27 February 2018"
+output: "html_document"
+---
+
+Source: Kaggle
+https://www.kaggle.com/datasnaek/youtube-new
+
+```{r}
+
+youtube_data = read.csv("e:/Data Science projects/Youtube videos/GBvideos.csv/GBvideos.csv")
+names(youtube_data)
+
+```
+
+## How often does watching a trending video result in further engagements (like, dislike, comment)?
+
+```{r}
+
+summary(youtube_data$likes)
+sum(youtube_data$likes)
+
+```
+
+The number of likes that a trending video has received ranges from 0 to 3.3 million. The average number of likes is 11,680 
+
+The total number of likes for all trending videos is 1.5 billion. 
+
+```{r}
+
+summary(youtube_data$dislikes)
+sum(youtube_data$dislikes)
+
+```
+
+The number of dislikes that a trending video has received ranges from 0 to 1.9 million. The average number of dislikes is 404. 
+
+The total number of dislikes for all trending videos is 136 million.
+
+```{r}
+
+summary(youtube_data$comment_count)
+sum(youtube_data$comment_count)
+
+```
+
+The number of comments that a trending video has received ranges from 0 to 1.6 million. The average number of comments is 1,298.
+
+The total number of comments for all trending videos is 193 million.
+
+The above results suggest that trending videos are more likely to be liked than disliked and more likely to disliked thant a comment left. This is probably because liking or disliking requires less work than leaving a comment (a simple mouseclick). Furthermore, despite the attention paid to the problem of trolling and negative interactions, it would appear that vast majority of interactions on YouTube are positive and quick. 
+
+
+```{r  v}
+
+summary(youtube_data$views)
+sum(as.numeric(youtube_data$views))
+
+```
+
+The number of views that a trending video has received ranges from 851 to 219 million. The total number of views for all trending videos is 55 
+
+This suggests that trending videos are watched significantly more times than they are also liked or disliked or comments are left. That is, of the 55 billion times that trending videos are watched, just 3% of those views resulted in a "like" and less than 1% resulted in a "dislike" or a comment. 
+
+On Youtube, one cannot both like and dislike the same video. It is assumed that one watches a video before liking or disliking it or leaving a comment.
+
+## What is the relationship between the number of views and the type of engagement?
+
+```{r}
+
+lm.fit = lm(likes~views,data = youtube_data)
+summary(lm.fit)
+
+```
+
+The p-value is very small and the t-value is sufficiently large, indicating that there is a relationship between the number of views and the number of likes.
+
+```{r}
+
+lm.fit = lm(dislikes~views,data = youtube_data)
+summary(lm.fit)
+
+```
+
+The p-value is very small and the t-value is sufficiently large, indicating that there is a relationship between the number of views and the number of dislikes.
+
+```{r}
+
+lm.fit = lm(comment_count~views,data = youtube_data)
+summary(lm.fit)
+
+```
+ 
+The p-value is very small and the t-value is sufficiently large, indicating that there is a relationship between the number of views and the number of comments.
+
+```{r}
+
+cor(youtube_data$views,youtube_data$likes)
+cor(youtube_data$views,youtube_data$dislikes)
+cor(youtube_data$views,youtube_data$comment_count)
+cor(youtube_data$likes,youtube_data$dislikes)
+
+```
+
+There is a strong correlation between the number of views of a trending video and the number of likes. However, the is a weak correlation between the number of views and the number of dislikes and the number of comments. There is also a weak correlation between the number of likes and the numbe of dislikes.
+
+## What is the relationship between comment count, likes and dislikes?
+
+```{r}
+
+lm.fit = lm(comment_count~dislikes,data = youtube_data)
+summary(lm.fit)
+
+```
+
+```{r}
+
+lm.fit = lm(comment_count~likes,data = youtube_data)
+summary(lm.fit)
+
+```
+
+There is a relationship between comment count and number of dislikes and number of likes.
+
+```{r}
+
+cor(youtube_data$comment_count,youtube_data$likes)
+cor(youtube_data$comment_count,youtube_data$dislikes)
+
+```
+
+I have assumed that those who leave a comment for a trending video have also indicated whether they like or dislike it.
+
+There is a strong correlation between the number of dislikes and the number of comment. There is slighly weaker, but still relatively strong, relationship between the number of likes and the number of comments. This suggests that comments are more likely to left by those who have disliked a trending video, but those who like a video do also leave comments too.
+
+Nevertheless, the comments for the vast majority of trending videos have not been disabled.
+
+```{r}
+
+summary(youtube_data$comments_disabled)
+
+```
+
+
+
+
