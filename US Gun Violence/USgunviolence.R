@@ -1,4 +1,4 @@
-usgunviol <- read.csv("e:/Data Science projects/US Gun violence/gun-violence-data_01-2013_03-2018.csv")
+usgunviol <- read.csv("gun-violence-data_01-2013_03-2018.csv")
 
 names(usgunviol)
 
