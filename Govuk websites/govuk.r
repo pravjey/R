@@ -1,10 +1,10 @@
-govweb2017 <- read.csv("e:/Data Science projects/Govuk websites/List_of_.gov.uk_domain_names_as_at_26_October_2017.csv")
-govweb2016 <- read.csv("e:/Data Science projects/Govuk websites/List_of_gov.uk_domains_as_of_1_Oct_2016.csv")
-govweb2015 <- read.csv("e:/Data Science projects/Govuk websites/gov.uk_domains_as_of_01Oct_2015.csv")
-govweb2014 <- read.csv("e:/Data Science projects/Govuk websites/List_of_gov_uk_domain_names_as_at_1_October_2014.csv")
-govweb2013 <- read.csv("e:/Data Science projects/Govuk websites/gov-uk_domain_names_as_at_1_October_2013.csv")
-govweb2012 <- read.csv("e:/Data Science projects/Govuk websites/gov-uk-domains-as-of-1-Oct-2012.csv")
-govweb2011 <- read.csv("e:/Data Science projects/Govuk websites/gov-uk-domains_as_of_1_Oct_2011.csv")
+govweb2017 <- read.csv("List_of_.gov.uk_domain_names_as_at_26_October_2017.csv")
+govweb2016 <- read.csv("List_of_gov.uk_domains_as_of_1_Oct_2016.csv")
+govweb2015 <- read.csv("gov.uk_domains_as_of_01Oct_2015.csv")
+govweb2014 <- read.csv("List_of_gov_uk_domain_names_as_at_1_October_2014.csv")
+govweb2013 <- read.csv("gov-uk_domain_names_as_at_1_October_2013.csv")
+govweb2012 <- read.csv("gov-uk-domains-as-of-1-Oct-2012.csv")
+govweb2011 <- read.csv("gov-uk-domains_as_of_1_Oct_2011.csv")
 
 View(govweb2017)
 
