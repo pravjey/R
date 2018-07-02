@@ -1,0 +1,181 @@
+---
+title: "TitanicSurvivors"
+author: "Pravin Jeyaraj"
+date: "1 July 2018"
+output: html_document
+---
+
+```{r}
+
+train <- read.csv("e:/Data Science projects/Titanic/train.csv")
+test <- read.csv("e:/Data Science projects/Titanic/test.csv")
+
+names(train)
+
+```
+
+As the majority of fields are categorical, I have used logistic regression to build a model. I did not use PassengerId, Name, Ticket or Cabin, because they are unique identifiers.
+
+```{r}
+
+Survived.glm <- glm(Survived~Pclass+Sex+Age+SibSp+Parch+Fare+Embarked, data = train, family = "binomial")
+summary(Survived.glm)
+
+
+```
+
+The liklihood of survival depends on class of ticket, gender, age and whether they were travelling with a spouse or siblings.
+
+The liklihood of survival decreases if the passenger is male, older, had a lower class ticket and was travelling with a spouse or more siblings.
+
+```{r}
+
+test_predictions <- predict(Survived.glm, newdata = test, type="response")
+Survived.pred = rep(0,418)
+Survived.pred[test_predictions>.5]=1
+PassengerID <- data.frame(test$PassengerId,Survived.pred)
+
+table(PassengerID$Survived.pred == 1)
+write.csv(PassengerID, file = "e:/Data Science projects/Titanic/submission_glm.csv")
+
+
+
+
+```
+
+Of the test dataset, 131 survived and 287 died.
+ 
+The predictive accuracy can be improved using a regression tree.
+
+```{r}
+
+library(tree)
+
+Survived.tree <- tree(Survived~Pclass+Sex+Age+SibSp+Parch+Fare+Embarked, data = train)
+Survived.tree
+summary(Survived.tree)
+
+plot(Survived.tree)
+text(Survived.tree, pretty = 0)
+
+```
+
+If the passenger was female, she ws most likely to survive if she had a first or second class ticket. If she had a third class ticket, she had a small likelihood survival if the fare paid was less that £20.80.
+
+If the passenger was male, he was most likely to survive if he was younger than 6.5 years and was travelling with one or two siblings or a spouse. He was unlikely to survive if he was travelling with three or more siblings or a spouse. He was not likely to survive ha he was older than 6.5 years but the risk of death was less if he had first class ticket and was younger than 53  years.
+
+```{r}
+
+test_predictions <- predict(Survived.tree, newdata = test)
+
+Survived.pred = rep(0,418)
+Survived.pred[test_predictions>.5]=1
+
+PassengerID <- data.frame(test$PassengerId,Survived.pred)
+
+table(PassengerID$Survived.pred == 1)
+
+write.csv(PassengerID, file = "e:/Data Science projects/Titanic/submission_regtree.csv")
+
+
+
+```
+
+
+Of the test dataset, 150 survived and 268 died.
+
+Since only five out of seven variables were used in the construction of the tree, increasing the number of variables in the formula will not make any difference.
+
+# How much can the tree be pruned for better interpretation without affecting the accuracy?
+
+```{r}
+
+survived.tree.cv <- cv.tree(Survived.tree)
+summary(survived.tree.cv)
+survived.tree.cv
+plot(survived.tree.cv$size,survived.tree.cv$dev,type='b')
+
+```
+
+The tree can be pruned to seven levels without affecting the accuracy. With more levels, there is a risk that the model will be overfit to the data. With less levels, the model may be less accurate.  
+
+```{r}
+
+survived.tree.prune <- prune.tree(Survived.tree,best=7)
+
+test_predictions <- predict(survived.tree.prune, newdata = test)
+
+Survived.pred = rep(0,418)
+Survived.pred[test_predictions>.5]=1
+
+PassengerID <- data.frame(test$PassengerId,Survived.pred)
+
+table(PassengerID$Survived.pred == 1)
+
+write.csv(PassengerID, file = "e:/Data Science projects/Titanic/submission_regtreeprune.csv")
+
+```
+
+# Can I improve the accuracy by omitting blank elements?
+
+```{r}
+
+table(is.na(train$Fare)) 
+table(is.na(train$Sex))
+table(is.na(train$SibSp))
+table(is.na(train$Parch))
+table(is.na(train$Embarked))
+table(is.na(train$Pclass))
+table(is.na(train$Age))
+
+```
+
+There only field included in model with missing data is Age. in 177 observations in the training data, the age is missing.
+
+```{r}
+
+train2 <- na.omit(train)
+
+nrow(train2)
+
+median(train2$Age)
+mean(train2$Age)
+
+```
+
+Without the observations with missing observations, there are 714 observations
+
+```{r}
+
+Survived.tree <- tree(Survived~Fare+Sex+Age+SibSp+Parch+Embarked+Pclass, data = train2)
+Survived.tree
+summary(Survived.tree)
+
+plot(Survived.tree)
+text(Survived.tree, pretty = 0)
+
+survived.tree.cv <- cv.tree(Survived.tree)
+summary(survived.tree.cv)
+survived.tree.cv
+plot(survived.tree.cv$size,survived.tree.cv$dev,type='b')
+
+survived.tree.prune <- prune.tree(Survived.tree,best=7)
+plot(survived.tree.prune)
+text(survived.tree.prune, pretty = 0)
+
+test_predictions <- predict(survived.tree.prune, newdata = test)
+
+Survived.pred = rep(0,418)
+Survived.pred[test_predictions>.5]=1
+
+PassengerID <- data.frame(test$PassengerId,Survived.pred)
+
+write.csv(PassengerID, file = "e:/Data Science projects/Titanic/submission_regtreeomit.csv")
+
+table(PassengerID$Survived.pred == 1)
+
+
+```
+
+Omitting the training data with missing ages does not affect the predictions on the test data.
+
