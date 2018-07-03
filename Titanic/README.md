@@ -1,12 +1,12 @@
 What factors contributed to theliklihood of survival in the Titanic disaster?
 
 Competition on Kaggle:
-https://www.kaggle.com/c/titanic
+https://www.kaggle.com/drpjeyaraj/logisitic-regression-and-regression-trees
 
 Various submissions made:
 https://www.kaggle.com/c/titanic/submissions?sortBy=date&group=all&page=1
 
-Best score: 0775598
+Best score: 0.775598
 (Currently with top 49%)
 
 Skills used:
