@@ -7,7 +7,7 @@ Blog: https://pravinjeyaraj.wordpress.com/2018/08/03/making-money-from-your-ipho
 
 Skills used:
 
-R programming
-Modelling using regression trees
-Modelling using linear and logistic regression
-Corellations
+1. R programming
+2. Modelling using regression trees
+3. Modelling using linear and logistic regression
+4. Corellations
