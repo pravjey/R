@@ -1,5 +1,5 @@
 
-What factors contributed to "popularity" on iPhone apps?
+What factors contributed to "popularity" of iPhone apps?
 
 Code on Kaggle: https://www.kaggle.com/drpjeyaraj/app-attributes-versus-user-rating-price/code
 
